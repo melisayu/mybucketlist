@@ -1,0 +1,90 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="hero container mb-5">
+      <div class="row">
+        <div class="col-6">
+          <img src="{% static 'img/dandelion.jpg' %}" />
+        </div>
+        <div class="col-6 d-flex flex-column justify-content-center">
+          <h2 class="mb-5">Here is a place where I share my personal wishes, hopes, and dreams</h2>
+          <button>&hearts; Subscribe</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="post pt-5">
+      <h3 class="my-4">Featured Posts</h3>
+      <div class="row">
+        <div class="col-12 d-flex flex-wrap mb-5">
+          {% for post in posts|slice:":3" %}
+            <div class="post featured col-4">
+              <div class="img-container mb-4">
+              {% if post.main_pic %}
+                <img src="{{ post.main_pic.url }}" alt="{{ post.title }}" />
+              {% endif %}
+              </div>
+              <h4>
+                <a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a>
+              </h4>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="post main-list row">
+      <div class="col-8 left-side">
+        {% for post in posts %}
+          <div class="d-flex my-5">
+            <div class="img-container col-6">
+            {% if post.main_pic %}
+              <img src="{{ post.main_pic.url }}" alt="{{ post.title }}" />
+            {% endif %}
+            </div>
+            {% if post.published_date %}
+            <div class="ml-4 col-5">
+              <h4>
+                <a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a>
+              </h4>
+              <div class="date">
+                {{ post.published_date }}
+              </div>
+              <a href="{% url 'post_detail' pk=post.pk %}">Comments: {{ post.approved_comments.count }}</a>
+            </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+      <div class="col-4 right-side">
+        <div class="search py-4 mt-4">
+          <h4>Search</h4>
+          <input type="search" placeholder="What are you looking for?" class="mt-2" />
+          <i class="fas fa-search"></i>
+        </div>
+        <div class="follow py-4">
+          <h4>Follow Me</h4>
+          <div class="mt-4">
+            <a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+            <a href="https://facebook.com"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://instagran.com"><i class="fab fa-instagram"></i></a>
+            <a href="https://pinterest.com"><i class="fab fa-pinterest"></i></a>
+            <a href="https://youtube.com"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+        <div class="categories py-4">
+          <h4>Categories</h4>
+          <ul class="pl-0 pt-2">
+            <a href="#"><li>travel (50)</li></a>
+            <a href="#"><li>lifestyle (12)</li></a>
+            <a href="#"><li>stuff (27)</li></a>
+            <a href="#"><li>foods (10)</li></a>
+          </ul>
+        </div>
+        <div class="instagram py-4">
+          <h4>Instagram</h4>
+        </div>
+      </div>
+    </div>
+{% endblock %}

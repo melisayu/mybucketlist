@@ -1,0 +1,51 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+  <div class="post detail container my-4">
+    {% if user.is_authenticated %}
+    <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}">
+      <i class="fa fa-edit"></i>
+    </a>
+    <a class="btn btn-default" href="{% url 'post_remove' pk=post.pk %}">
+      <i class="fa fa-trash-alt"></i>
+    </a>
+    {% endif %}
+    <h2>{{ post.title }}</h2>
+    {% if post.published_date %}
+    <div class="date">
+      {{ post.published_date }}
+    </div>
+    {% else %}
+      <a class="btn btn-default" href="{% url 'post_publish' pk=post.pk %}">Publish</a>
+    {% endif %}
+    <p class="my-5 text-justify">{{ post.text|linebreaksbr }}</p>
+    {% if post.main_pic %}
+      <img src="{{ post.main_pic.url }}" alt="Post Picture" />
+    {% endif %}
+  </div>
+  <hr>
+  <div class="container h-100 comment-section my-4">
+    <a class="btn btn-default" href="{% url 'add_comment_to_post' pk=post.pk %}">Add comment</a>
+    {% for comment in post.comments.all %}
+      {% if user.is_authenticated or comment.approved_comment %}
+      <div class="comment">
+        <div class="date">
+          {{ comment.created_date }}
+          {% if not comment.approved_comment %}
+            <a href="{% url 'comment_remove' pk=comment.pk %}">
+               <i class="far fa-window-close"></i>
+            </a>
+            <a href="{% url 'comment_approve' pk=comment.pk %}">
+              <i class="far fa-check-square"></i>
+            </a>
+          {% endif %}
+        </div>
+        <h5 class="mb-2">{{ comment.author }}</h5>
+        <p>{{ comment.text }}</p>
+      </div>
+      {% endif %}
+    {% empty %}
+      <h4 class="mt-4">No comments yet here :(</h4>
+    {% endfor %}
+  </div>
+{% endblock %}
